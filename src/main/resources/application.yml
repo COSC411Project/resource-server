@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: resource-server
+    
+  profiles:
+    active: dev
+    
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+    
+  data:
+    mongodb:
+      port: 27017
+      database: guava
+      
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+      
+  data:
+    mongodb:
+      port: 27017
+      database: guava
