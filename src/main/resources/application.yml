@@ -17,6 +17,10 @@ spring:
       port: 27017
       database: guava
       
+rsa:
+  public-key:
+    path: keys/cosc411/authorization-server/prod/public.key
+    
 ---
 
 spring:
@@ -29,3 +33,7 @@ spring:
     mongodb:
       port: 27017
       database: guava
+      
+rsa:
+  public-key:
+    path: keys/cosc411/authorization-server/test/public.key
