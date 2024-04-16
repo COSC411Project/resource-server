@@ -31,7 +31,7 @@ public class TokenVerificationFilter extends OncePerRequestFilter {
 									HttpServletResponse response, 
 									FilterChain filterChain)
 			throws ServletException, IOException {
-		if (request.getRequestURI().contains("/jobs")) {
+		if (request.getRequestURI().contains("/jobs") && !request.getRequestURI().contains("/scores")) {
 			filterChain.doFilter(request, response);
 			return;
 		}

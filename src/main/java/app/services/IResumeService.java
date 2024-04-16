@@ -14,5 +14,6 @@ public interface IResumeService {
 	void saveResume(InputStream inputStream, String name, int userId) throws FileNotFoundException, IOException;
 	Resume viewResume(String name, int userId) throws IOException;
 	boolean deleteResume(String name, int userId);
+	String getResume(int userId) throws IOException;
 	
 }

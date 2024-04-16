@@ -1,6 +1,7 @@
 package app.services;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,6 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +76,48 @@ public class ResumeService implements IResumeService {
 		String filePath = basePath + "/" + userId + "/" + name;
 		File file = new File(filePath);
 		return file.delete();
+	}
+
+	@Override
+	public String getResume(int userId) throws IOException {
+		String folderPath = basePath + "/" + userId;
+		File folder = new File(folderPath);
+		if (!folder.exists()) {
+			return null;
+		}
+		
+		File[] resumes = folder.listFiles();
+		if (resumes.length == 0) {
+			return null;
+		}
+		
+		File resume = resumes[0];
+		
+		if (resume.getName().contains(".pdf")) {
+			return getTextFromPDF(resume);
+		} else {
+			return getTextFromDOC(resume);
+		}
+	}
+
+	private String getTextFromPDF(File resume) throws IOException {
+		try (PDDocument document = PDDocument.load(resume)) {
+			PDFTextStripper stripper = new PDFTextStripper();
+			return stripper.getText(document);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	private String getTextFromDOC(File resume) throws FileNotFoundException, IOException {
+		try (FileInputStream inputStream = new FileInputStream(resume);
+			 XWPFDocument doc = new XWPFDocument(inputStream);
+			 XWPFWordExtractor extractor = new XWPFWordExtractor(doc);) {
+			
+			return extractor.getText();
+		} catch (Exception ex) {
+			return null;
+		}
 	}
 
 }
