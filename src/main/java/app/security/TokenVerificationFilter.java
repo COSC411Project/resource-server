@@ -27,8 +27,15 @@ public class TokenVerificationFilter extends OncePerRequestFilter {
 	private String publicKeyPath;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(HttpServletRequest request, 
+									HttpServletResponse response, 
+									FilterChain filterChain)
 			throws ServletException, IOException {
+		if (request.getRequestURI().contains("/jobs")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+		
 		String header = request.getHeader("Authorization");
 		if (header == null || !header.contains("Bearer")) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

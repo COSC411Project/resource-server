@@ -38,7 +38,8 @@ public class SecurityConfig {
 		}).httpBasic((customizer) -> {
 			customizer.disable();
 		}).authorizeHttpRequests((customizer) -> {
-			customizer.anyRequest().authenticated();
+			customizer.requestMatchers("/api/jobs").permitAll()
+					  .anyRequest().authenticated();
 		}).addFilterAt(tokenVerficationFilter, BasicAuthenticationFilter.class).build();
 	}
 }
